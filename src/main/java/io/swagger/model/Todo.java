@@ -30,6 +30,15 @@ public class Todo   {
     return this;
   }
 
+  public Todo(){}
+
+  public Todo(String id, String name, boolean completed) {
+    super();
+    this.id = id;
+    this.name = name;
+    this.completed = completed;
+  }
+
   /**
    * Get id
    * @return id

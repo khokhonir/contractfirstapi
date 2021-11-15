@@ -31,6 +31,7 @@ import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,16 +45,22 @@ public class TodosApiController implements TodosApi {
 
     private final HttpServletRequest request;
 
+     Todo todo = new Todo();
+
+
     @org.springframework.beans.factory.annotation.Autowired
-    public TodosApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public TodosApiController(ObjectMapper objectMapper, HttpServletRequest request ) {
         this.objectMapper = objectMapper;
         this.request = request;
+
     }
+
 
     public ResponseEntity<Todos> todosGet() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
+                log.debug("Returning a default to do action");
                 return new ResponseEntity<Todos>(objectMapper.readValue("{\n  \"todos\" : [ {\n    \"name\" : \"Do some work\",\n    \"id\" : \"abc123\",\n    \"completed\" : true\n  }, {\n    \"name\" : \"Do some work\",\n    \"id\" : \"abc123\",\n    \"completed\" : true\n  } ]\n}", Todos.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
@@ -73,8 +80,21 @@ public class TodosApiController implements TodosApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<Todo>(objectMapper.readValue("{\n  \"name\" : \"Do some work\",\n  \"id\" : \"abc123\",\n  \"completed\" : true\n}", Todo.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+                    log.debug("Updating a Todo action");
+                   // Todo todo = new Todo();
+                    todo.setId(id);
+                    todo.setName(body.getName());
+                    if (body.isCompleted()) {
+                        todo.setCompleted(true);
+                    }
+                    else{
+                        todo.setCompleted(false);
+                    }
+
+                    return new ResponseEntity<Todo>(todo, HttpStatus.OK);
+
+               // return new ResponseEntity<Todo>(objectMapper.readValue("{\n  \"name\" : \"Do some work\",\n  \"id\" : \"abc123\",\n  \"completed\" : true\n}", Todo.class), HttpStatus.NOT_IMPLEMENTED);
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<Todo>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -83,12 +103,35 @@ public class TodosApiController implements TodosApi {
         return new ResponseEntity<Todo>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+
+
     public ResponseEntity<Todo> todosPost(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody Todo body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<Todo>(objectMapper.readValue("{\n  \"name\" : \"Do some work\",\n  \"id\" : \"abc123\",\n  \"completed\" : true\n}", Todo.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
+
+                log.debug("Adding a Todo action");
+
+                System.out.print (" The name is *****************" +  body.getName());
+                System.out.print (" The id is *****************" +  body.getId());
+
+                todo.setId(body.getId());
+                todo.setName(body.getName());
+                if (body.isCompleted()) {
+                    todo.setCompleted(true);
+                }
+                else{
+                    todo.setCompleted(false);
+                }
+
+                if (body.getName().equals("I'm lazy")){
+                    log.error("Returning I'm lazy");
+                    return new ResponseEntity<Todo>(HttpStatus.INTERNAL_SERVER_ERROR);
+                }else {
+                    return new ResponseEntity<Todo>(todo, HttpStatus.OK);
+                   // return new ResponseEntity<Todo>(objectMapper.readValue("{\n  \"name\" : \"Do some work\",\n  \"id\" : \"abc123\",\n  \"completed\" : true\n}", Todo.class), HttpStatus.NOT_IMPLEMENTED);
+                }
+            } catch (Exception e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<Todo>(HttpStatus.INTERNAL_SERVER_ERROR);
             }

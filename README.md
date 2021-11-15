@@ -1,4 +1,4 @@
-# VATIT TODO API
+# TODO API
 
 ## Overview  
 This is a  simple todo api problem to be used as a technical test.

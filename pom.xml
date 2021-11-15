@@ -17,11 +17,7 @@
         <version>2.5.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-<!--    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.16.RELEASE</version>
-    </parent>-->
+
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
@@ -39,6 +35,14 @@
         </plugins>
     </build>
     <dependencies>
+
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>4.3.3</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -48,7 +52,7 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
         </dependency>
         
-        <!--SpringFox dependencies -->
+
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-oas</artifactId>
